@@ -190,6 +190,8 @@ function randName(length) {
     return result;
 }
 
-app.listen(8080, () => {
-    console.log('Started');
+let port = 8080;
+
+app.listen(port, () => {
+    console.log('Started at port ' + port);
 });
