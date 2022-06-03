@@ -18,7 +18,7 @@ const imageTypes = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload({ createParentPath: true }));
-app.use(cors({ origin: 'https://drive.incin.net', credentials: true }));
+app.use(cors({ origin: process.env.CLIENT, credentials: true }));
 app.use(cookieParser());
 
 var public = path.join(__dirname, 'store');
@@ -119,13 +119,20 @@ app.get('/files/:dir*', async (req, res) => {
             size: true,
         })
     ).children;
-    for (let f of files) {
-        delete f['path'];
-        delete f['isSymbolicLink'];
-        delete f['sizeInBytes'];
-    }
+    if (files)
+        for (let f of files) {
+            delete f['path'];
+            delete f['isSymbolicLink'];
+            delete f['sizeInBytes'];
+        }
     res.json({
         struct: files,
+    });
+});
+
+app.get('/newFolder/:dir*', (req, res) => {
+    fs.mkdir(`./store/${req.params.dir + req.params[0]}`, () => {
+        res.json({ message: 'Folder created' });
     });
 });
 
@@ -190,7 +197,7 @@ function randName(length) {
     return result;
 }
 
-let port = 8080;
+let port = process.env.PORT;
 
 app.listen(port, () => {
     console.log('Started at port ' + port);
