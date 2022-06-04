@@ -25,5 +25,6 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: 'npm'
+                  clean: 'false'
             - run: npm i
             - run: pm2 restart drive-server

@@ -31,14 +31,14 @@ app.get('/', (req, res) => {
 });
 
 app.get('/delete/file/:dir*', (req, res) => {
-    fs.unlink(`./store/${req.params.dir + req.params[0]}`, () => {
+    fs.unlink(`../store/${req.params.dir + req.params[0]}`, () => {
         res.json({ message: 'File deleted' });
     });
 });
 
 app.get('/delete/folder/:dir*', (req, res) => {
     fs.rm(
-        `./store/${req.params.dir + req.params[0]}`,
+        `../store/${req.params.dir + req.params[0]}`,
         { recursive: true, force: true },
         () => {
             res.json({ message: 'Folder deleted' });
@@ -65,12 +65,12 @@ app.get('/file/:dir*', (req, res) => {
         const archive = archiver('zip');
 
         const name = randName(10);
-        const out = fs.createWriteStream(`./temp/${name}.zip`);
+        const out = fs.createWriteStream(`../temp/${name}.zip`);
 
         archive.pipe(out);
 
         archive.directory(
-            `./store/${req.params.dir + req.params[0]}`,
+            `../store/${req.params.dir + req.params[0]}`,
             `${req.params[0]}`,
         );
 
@@ -83,7 +83,7 @@ app.get('/file/:dir*', (req, res) => {
                     req.params[0].length === 0 ? req.params.dir : req.params[0]
                 }.zip`,
                 () => {
-                    fs.unlink(`./temp/${name}.zip`, () => {});
+                    fs.unlink(`../temp/${name}.zip`, () => {});
                 },
             );
         });
@@ -93,7 +93,7 @@ app.get('/file/:dir*', (req, res) => {
 app.get('/files', async (req, res) => {
     let files =
         (
-            await dree.scanAsync('./store/', {
+            await dree.scanAsync('../store/', {
                 depth: 1,
                 normalize: true,
                 hash: false,
@@ -112,7 +112,7 @@ app.get('/files', async (req, res) => {
 
 app.get('/files/:dir*', async (req, res) => {
     let files = (
-        await dree.scanAsync('./store/' + req.params.dir + req.params[0], {
+        await dree.scanAsync('../store/' + req.params.dir + req.params[0], {
             depth: 1,
             normalize: true,
             hash: false,
@@ -131,7 +131,7 @@ app.get('/files/:dir*', async (req, res) => {
 });
 
 app.get('/newFolder/:dir*', (req, res) => {
-    fs.mkdir(`./store/${req.params.dir + req.params[0]}`, () => {
+    fs.mkdir(`../store/${req.params.dir + req.params[0]}`, () => {
         res.json({ message: 'Folder created' });
     });
 });
@@ -143,7 +143,7 @@ app.post('/upload/', async (req, res) => {
         ? req.files.files
         : [req.files.files];
     for (let file of files) {
-        if (Object.keys(struct).length == 0) file.mv(`./store/${file.name}`);
+        if (Object.keys(struct).length == 0) file.mv(`../store/${file.name}`);
         else mvmap[file.name] = file.mv;
     }
     iter(struct, mvmap);
@@ -172,7 +172,7 @@ app.get('/auth/', (req, res) => {
     else res.json({ message: 'Not authenticated', r: '/auth' });
 });
 
-function iter(struct, mvmap, root = './store') {
+function iter(struct, mvmap, root = '../store') {
     Object.keys(struct).forEach(function (k) {
         if (struct[k] !== null && typeof struct[k] === 'object') {
             iter(struct[k], mvmap, root + '/' + k);
