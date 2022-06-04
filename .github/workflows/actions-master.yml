@@ -27,4 +27,5 @@ jobs:
                   cache: 'npm'
                   clean: 'false'
             - run: npm i
+            - run: cp ../.env .env
             - run: pm2 restart drive-server
