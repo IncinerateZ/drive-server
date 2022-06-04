@@ -27,7 +27,7 @@ app.use(express.static(public));
 app.use(express.static(tmp));
 
 app.get('/', (req, res) => {
-    res.json({ message: 'drive-server v1' });
+    res.json({ message: 'drive-server v1.1' });
 });
 
 app.get('/delete/file/:dir*', (req, res) => {
