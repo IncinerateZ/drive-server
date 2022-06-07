@@ -21,8 +21,8 @@ app.use(fileUpload({ createParentPath: true }));
 app.use(cors({ origin: process.env.CLIENT, credentials: true }));
 app.use(cookieParser());
 
-var public = path.join(__dirname, 'store');
-var tmp = path.join(__dirname, 'temp');
+var public = path.join(__dirname, '../store');
+var tmp = path.join(__dirname, '../temp');
 app.use(express.static(public));
 app.use(express.static(tmp));
 
