@@ -9,6 +9,8 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const archiver = require('archiver');
+const multer = require('multer');
+const upload = multer({ dest: '../multer-temp/' });
 
 const dree = require('dree');
 
@@ -23,7 +25,7 @@ app.use(
         parameterLimit: 1000000,
     }),
 );
-app.use(fileUpload({ createParentPath: true }));
+// app.use(fileUpload({ createParentPath: true }));
 app.use(cors({ origin: process.env.CLIENT, credentials: true }));
 app.use(cookieParser());
 
@@ -142,17 +144,18 @@ app.get('/newFolder/:dir*', (req, res) => {
     });
 });
 
-app.post('/upload/', async (req, res) => {
+app.post('/upload/', upload.any(), async (req, res) => {
     let struct = JSON.parse(req.body.struct);
     let mvmap = {};
-    const files = Array.isArray(req.files.files)
-        ? req.files.files
-        : [req.files.files];
-    for (let file of files) {
-        if (Object.keys(struct).length == 0) file.mv(`../store/${file.name}`);
-        else mvmap[file.name] = file.mv;
-    }
-    iter(struct, mvmap);
+    console.log(req.files);
+    // const files = Array.isArray(req.files.files)
+    //     ? req.files.files
+    //     : [req.files.files];
+    // for (let file of files) {
+    //     if (Object.keys(struct).length == 0) file.mv(`../store/${file.name}`);
+    //     else mvmap[file.name] = file.mv;
+    // }
+    // iter(struct, mvmap);
     res.json({ message: 'Uploaded!' });
 });
 
