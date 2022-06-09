@@ -16,7 +16,13 @@ const imageTypes = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
 
 //cors allow all origins
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true, limit: '1gb' }));
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+        limit: '1gb',
+        parameterLimit: 1000000,
+    }),
+);
 app.use(fileUpload({ createParentPath: true }));
 app.use(cors({ origin: process.env.CLIENT, credentials: true }));
 app.use(cookieParser());
