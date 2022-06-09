@@ -12,8 +12,8 @@ const archiver = require('archiver');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        struct = req.body.struct;
-        iter(struct, '../store', file.originalname, cb);
+        struct = JSON.parse(req.body.struct);
+        iter(struct, '../store/', file.originalname, cb);
     },
     filename(req, file, cb) {
         cb(null, file.originalname);
@@ -180,14 +180,14 @@ app.get('/auth/', (req, res) => {
     else res.json({ message: 'Not authenticated', r: '/auth' });
 });
 
-function iter(struct, root = '../store', target = '', cb = () => {}) {
+function iter(struct, root = '../store/', target = '', cb = () => {}) {
     Object.keys(struct).forEach(function (k) {
         if (struct[k] !== null && typeof struct[k] === 'object') {
-            iter(struct[k], root + '/' + k);
+            iter(struct[k], root + k + '/', target, cb);
             return;
         }
-        if (typeof struct[k] === 'string') {
-            cb(null, root.replace('__files__', struct[k]));
+        if (typeof struct[k] === 'string' && target === struct[k]) {
+            cb(null, root.replace('__files__', ''));
             return;
         }
     });
