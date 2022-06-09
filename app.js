@@ -12,7 +12,7 @@ const archiver = require('archiver');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        let struct = JSON.parse(req.body.struct);
+        struct = req.body.struct;
         iter(struct, '../store', file.originalname, cb);
     },
     filename(req, file, cb) {
@@ -155,17 +155,6 @@ app.get('/newFolder/:dir*', (req, res) => {
 });
 
 app.post('/upload/', upload.any(), async (req, res) => {
-    // let struct = JSON.parse(req.body.struct);
-    // let mvmap = {};
-    // const files = req.files;
-    // const files = Array.isArray(req.files.files)
-    //     ? req.files.files
-    //     : [req.files.files];
-    // for (let file of files) {
-    //     if (Object.keys(struct).length == 0) file.mv(`../store/${file.name}`);
-    //     else mvmap[file.name] = file.mv;
-    // }
-    // iter(struct, mvmap);
     res.json({ message: 'Uploaded!' });
 });
 
@@ -191,26 +180,15 @@ app.get('/auth/', (req, res) => {
     else res.json({ message: 'Not authenticated', r: '/auth' });
 });
 
-// function iter(struct, mvmap, root = '../store') {
-//     Object.keys(struct).forEach(function (k) {
-//         if (struct[k] !== null && typeof struct[k] === 'object') {
-//             iter(struct[k], mvmap, root + '/' + k);
-//             return;
-//         }
-//         if (typeof struct[k] === 'string') {
-//             mvmap[struct[k]](root.replace('__files__', struct[k]));
-//         }
-//     });
-// }
-
-function iter(struct, root = '../store', target = '', callback = () => {}) {
+function iter(struct, root = '../store', target = '', cb = () => {}) {
     Object.keys(struct).forEach(function (k) {
         if (struct[k] !== null && typeof struct[k] === 'object') {
             iter(struct[k], root + '/' + k);
             return;
         }
-        if (typeof struct[k] === 'string' && struct[k] == target) {
+        if (typeof struct[k] === 'string') {
             cb(null, root.replace('__files__', struct[k]));
+            return;
         }
     });
 }
