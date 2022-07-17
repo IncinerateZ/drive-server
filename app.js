@@ -24,7 +24,7 @@ const upload = multer({ storage: storage });
 
 const dree = require('dree');
 
-const imageTypes = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
+const imageTypes = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg', 'mp4'];
 
 //cors allow all origins
 app.use(bodyParser.json());
@@ -45,7 +45,7 @@ app.use(express.static(public));
 app.use(express.static(tmp));
 
 app.get('/', (req, res) => {
-    res.json({ message: 'drive-server v1.11' });
+    res.json({ message: 'drive-server v1.12' });
 });
 
 app.get('/delete/file/:dir*', (req, res) => {
